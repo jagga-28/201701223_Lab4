@@ -1,0 +1,23 @@
+from pymongo import MongoClient
+from pprint import pprint
+client=MongoClient("mongodb+srv://HitarthBharad:iamHitarthBharad@cluster0-3igae.mongodb.net/test?retryWrites=true&w=majority")
+db=client["analytics"]
+
+var data = db.customers.find({ name: "Leslie Martinez" }).toArray();
+var account = data[0].accounts[0];
+db.transactions.updateOne(
+  { account_id: account },
+  {
+    $push: {
+      transactions: {
+        date: new Date(),
+        amount: 600,
+        transaction_code: "buy",
+        symbol: "amzn",
+        price: 650.5,
+        total: 600 * 650.5,
+      },
+    },
+    $inc: { transaction_count: 1 },
+  }
+);
